@@ -79,6 +79,7 @@ local costumeEquipped = false   -- player has goatee
 local oldRoom = nil             -- store the previous room
 local room = nil                -- store the current room
 local tyRooms = {}              -- things we fucked with
+local karma = nil
 local floor = 0
 local canFly = false            -- can we fly?
 local tyrone = nil              -- fuck shit up
@@ -130,16 +131,14 @@ local function Tyronize()
     --]]
     function tyrone.Please()
 
-        spawnSeed = room:GetSpawnSeed()
-        dropSeed = player:GetDropRNG():GetSeed()
         tyroneSeed = spawnSeed ~ dropSeed
 
-        _debug[1] =
+        _debug[0] =
                spawnSeed .. " ^ "
             .. dropSeed .. " = "
             .. tyroneSeed
 
-        return tyroneSeed % 5 == 0
+        return tyroneSeed % 2 == 0
 
     end
 
@@ -149,7 +148,7 @@ local function Tyronize()
     function tyrone.NoticeMe()
 
         local karma = dropSeed % math.floor(random(1 + 1) + player.Luck)
-        _debug[5] = "Good Karma is " .. karma
+        _debug[3] = "Good Karma is " .. karma
 
         if karma == 1 then
             if hasBrimstone and not hasLumpOfCoal then
@@ -170,16 +169,16 @@ local function Tyronize()
     function tyrone.RuinGame()
 
         local karma = dropSeed % math.floor(random(2 + 1) + player.Luck)
-        _debug[5] = "Bad Karma is " .. karma
+        _debug[3] = "Bad Karma is " .. karma
 
         if karma == 1 then
             if player:GetActiveCharge() > 0 then
-                player:SetActiveCharge(player:GetActiveCharge() - 1)
+                player:SetActiveCharge(player:GetActiveCharge() - 2)
                 return true
             end
         elseif karma == 2 then
             if hasTheD6 and not player:NeedsCharge() then
-                player:SetActiveCharge(player:GetActiveCharge() - 1)
+                player:SetActiveCharge(player:GetActiveCharge() - 2)
                 return true
             end
         end
@@ -386,6 +385,8 @@ function mod:PostUpdate()
     oldRoom = room -- save the old room
     room = game:GetRoom() -- store the current room
     roomEntities = Isaac.GetRoomEntities() -- store this room's entities
+    spawnSeed = room:GetSpawnSeed()
+    dropSeed = player:GetDropRNG():GetSeed()
     local frame = game:GetFrameCount()
     local isFiring = player:GetLastActionTriggers() & ActionTriggers.ACTIONTRIGGER_SHOOTING ~= 0
 
@@ -447,6 +448,7 @@ function mod:PostUpdate()
     hasLibra = player:HasCollectible(CollectibleType.COLLECTIBLE_LIBRA)
 
     if player:GetCollectibleCount() ~= collectibleCount then
+        player:ClearCostumes()
         player:AddNullCostume(costume)
         collectibleCount = player:GetCollectibleCount()
     end
@@ -456,39 +458,56 @@ function mod:PostUpdate()
         tyrone = Tyronize()
     end
 
-    tyroneHasPressedTheButton = tyrone.Please()
+    --[[
+        if tyrone hasn't pressed the button yet
+        and this room isn't blacklisted
+        try to press the button, roll karma
+        and blacklist the room
+    --]]
+    if not tyroneHasPressedTheButton and not tyRooms[spawnSeed] then
+        tyroneHasPressedTheButton = tyrone.Please()
+    end
 
-    if not tyRooms[spawnSeed] then
-
-        _debug[3] = "Harmless room"
-
-        if tyroneHasPressedTheButton and not ruinedYet then
-
+    --[[
+        if tyrone has pressed the button already
+        but his will hasn't been satisfied yet,
+        try and try and try to satisfy him in every
+        room.
+        if senpai noticed you but you didn't answer,
+        you lost your chance.
+    --]]
+    if tyroneHasPressedTheButton and not ruinedYet and not noticedYet then
+        if not tyRooms[spawnSeed] then
             tyRooms[spawnSeed] = true
-            _debug[3] = "Room was added to the blacklist"
+            karma = random(2)
+        end
 
-            local karma = random(1)
-            _debug[4] = "RNG Karma is " .. karma
-
-            if karma == 1 then
-                _debug[2] = "Tyrone wants to ruin your synergies"
-                ruinedYet = tyrone.RuinSynergies()
-            else
-                _debug[2] = "Tyrone wants to ruin your game"
-                ruinedYet = tyrone.RuinGame()
+        if karma == 0 then
+            _debug[1] = "Tyrone wants to ruin your synergies"
+            ruinedYet = tyrone.RuinSynergies()
+        elseif karma == 1 then
+            _debug[1] = "Tyrone wants to ruin your game"
+            ruinedYet = tyrone.RuinGame()
+        elseif karma == 2 then
+            _debug[1] = "Tyrone-senpai noticed you"
+            noticedYet = tyrone.NoticeMe()
+            if not noticedYet then
+                _debug[2] = "Tyrone-senpai has stopped caring"
+                tyroneHasPressedTheButton = false
+                noticedYet = false
             end
-
-            -- todo: add mercy option
         end
+    end
 
-        if tyroneHasPressedTheButton and ruinedYet then
-            _debug[2] = "Tyrone has succeeded"
-            tyroneHasPressedTheButton = false
-            ruinedYet = false
-        end
-
-    else
-        _debug[3] = "Room is blacklisted"
+    --[[
+        if tyrone has pressed the button and he's
+        satisfied of the outcome, reset the status
+    --]]
+    if tyroneHasPressedTheButton and (ruinedYet or noticedYet) then
+        _debug[2] = "Tyrone has succeeded"
+        tyroneHasPressedTheButton = false
+        ruinedYet = false
+        noticedYet = false
     end
 
 end
@@ -514,8 +533,8 @@ function mod:PostRender()
         return
     end
 
-    if _debug ~= nil then
-        for i=1,#_debug do
+    if _debug[0] ~= nil then
+        for i=0,#_debug do
             Isaac.RenderText(_debug[i], 50, 20 + i*10, 0, 255, 0, 255)
         end
     end

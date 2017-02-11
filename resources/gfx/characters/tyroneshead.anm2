@@ -1,11 +1,11 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="10/02/2017 23:01:11" Version="103" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="11/02/2017 12:06:52" Version="103" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="costumes\tyroneshead.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
-			<Layer Name="head3" Id="0" SpritesheetId="0"/>
+			<Layer Name="head" Id="0" SpritesheetId="0"/>
 		</Layers>
 		<Nulls/>
 		<Events/>
