@@ -1,0 +1,3 @@
+<items gfxroot="gfx/items/" version="1">
+    <passive name="Nicalis Curse" description="Thanks Tyrone!" gfx="tyrone.png" cache="all" devilprice="2" />
+</items>

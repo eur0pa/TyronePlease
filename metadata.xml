@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>Thanks Tyrone™</name>
+    <directory>tyrone</directory>
+    <description>Let the salt flow</description>
+    <version>1.0</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+</metadata>

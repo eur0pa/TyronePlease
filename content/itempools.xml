@@ -1,0 +1,106 @@
+<ItemPools>
+    <Pool Name="treasure">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="shop">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="boss">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="devil">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="angel">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="secret">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="library">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="challenge">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="goldenChest">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="redChest">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="beggar">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="demonBeggar">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="curse">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="keyMaster">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="bossrush">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="dungeon">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedTreasure">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedBoss">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedShop">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedCurse">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedDevil">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedAngel">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedLibrary">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedSecret">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedGoldenChest">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="bombBum">
+        <!--Tyrone please!-->
+        <Item Name="Nicalis Curse" Weight="999" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+</ItemPools>
