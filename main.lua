@@ -91,6 +91,7 @@ local lastIdleTime = game:GetFrameCount()
 local dropSeed = nil
 local spawnSeed = nil
 local tyroneSeed = nil
+local roomHazards = false
 
 
 --[[
@@ -155,6 +156,10 @@ local function Tyronize()
                 player:AddCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL, 0, false)
                 return true
             end
+        elseif karma == 2 then
+            if hasWhoreOfBabylon and not hasAbaddon then
+                player:AddCollectible(CollectibleType.COLLECTIBLE_ABADDON, 0, false)
+            end
         end
 
         return false
@@ -172,13 +177,15 @@ local function Tyronize()
         _debug[3] = "Bad Karma is " .. karma
 
         if karma == 1 then
+            -- discharge items
             if player:GetActiveCharge() > 0 then
                 player:SetActiveCharge(player:GetActiveCharge() - 2)
                 return true
             end
         elseif karma == 2 then
-            if hasTheD6 and not player:NeedsCharge() then
-                player:SetActiveCharge(player:GetActiveCharge() - 2)
+            -- remove fly if hazards in the room
+            if canFly and roomHazards then
+                canFly = false
                 return true
             end
         end
@@ -363,6 +370,37 @@ local function Tyronize()
 
     end
 
+    function tyrone.CheckForHazards()
+        for i=0,room:GetGridSize() do
+            local ent = room:GetGridEntity(i)
+            if ent ~= nil then
+                -- red poop
+                if ent:ToPoop() ~= nil then
+                    if ent:GetVariant() == 1 then
+                        return true
+                    end
+                -- spikes
+                elseif ent:ToSpikes() ~= nil then
+                    return true
+                end
+            end
+        end
+
+        -- check for creep, player's is excluded
+        for i,entity in ipairs(roomEntities) do
+            if entity:ToEffect() ~= nil then
+                if entity.Variant == EffectVariant.CREEP_GREEN or
+                   entity.Variant == EffectVariant.CREEP_RED or
+                   entity.Variant == EffectVariant.CREEP_YELLOW then
+                    return true
+                end
+            end
+        end
+
+
+        return false
+    end
+
     return tyrone
 end
 
@@ -458,6 +496,9 @@ function mod:PostUpdate()
         tyrone = Tyronize()
     end
 
+    roomHazards = tyrone.CheckForHazards()
+    _debug[1] = "room hazards " .. tostring(roomHazards)
+
     --[[
         if tyrone hasn't pressed the button yet
         and this room isn't blacklisted
@@ -516,7 +557,9 @@ mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.PostUpdate)
 
 function mod:EvaluateCache(_, player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_FLYING then
-        canFly = player:CanFly()
+        if canFly ~= player:CanFly() then
+            player.CanFly = canFly
+        end
     end
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.EvaluateCache)
