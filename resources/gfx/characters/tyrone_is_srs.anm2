@@ -2,7 +2,7 @@
 	<Info CreatedBy="robot" CreatedOn="11/02/2017 12:06:52" Version="103" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="costumes\tyroneshead.png" Id="0"/>
+			<Spritesheet Path="costumes\tyrone_is_srs.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="head" Id="0" SpritesheetId="0"/>

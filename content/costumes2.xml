@@ -1,3 +1,4 @@
 ﻿<costumes anm2root="gfx/characters/">
-	<costume anm2path="tyroneshead.anm2" type="none" />
+	<costume anm2path="tyrone_is_scheming.anm2" type="none" priority="99" />
+    <costume anm2path="tyrone_is_srs.anm2" type="none" priority="99" />
 </costumes>

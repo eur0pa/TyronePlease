@@ -8,7 +8,8 @@ local mod = RegisterMod("Tyrone", 1)
 
 -- mod ids for easier access
 local itemId = Isaac.GetItemIdByName("Nicalis Curse")
-local costume = Isaac.GetCostumeIdByPath("gfx/characters/tyroneshead.anm2")
+local costume_srs = Isaac.GetCostumeIdByPath("gfx/characters/tyrone_is_srs.anm2")
+local costume_scheming = Isaac.GetCostumeIdByPath("gfx/characters/tyrone_is_scheming.anm2")
 
 --[[
      collectible tracking for good / bad synergies
@@ -85,10 +86,8 @@ local collectibleCount = 0
 --]]
 local _log = {}
 local game = Game()             -- game instance
-local sfxManager = SFXManager() -- sfx instance
 local player = nil              -- player instance
 local costumeEquipped = false   -- player has goatee
-local lastIdleTime = game:GetFrameCount()
 local floor = 0
 local room = nil                -- store the current room
 local oldRoom = nil             -- store the previous room
@@ -96,9 +95,10 @@ local roomEntities = nil        -- entity list per room
 local tyrone = nil              -- fuck shit up
 local tyRooms = {}              -- rooms we fucked with
 local tyroneHasPressedTheButton = false
+local updateCostume = false
 local ruinedYet = false
 local noticedYet = false
-local karma = nil
+local karma = 0
 local canFly = false            -- can we fly?
 local punchingBagEntity = nil
 local dropSeed = nil
@@ -206,9 +206,6 @@ local function Tyronize()
     --]]
     function tyrone.Please()
         tyroneSeed = spawnSeed ~ dropSeed
-
-        _log[0] = spawnSeed .. " ^ " .. dropSeed .. " = " .. tyroneSeed
-
         return tyroneSeed % 5 == 0
     end
 
@@ -222,13 +219,13 @@ local function Tyronize()
     --]]
     function tyrone.NoticeMe()
         local karma = dropSeed % math.floor(random(2) + math.max(1, player.Luck))
-        _log[3] = "Good Karma is " .. karma
 
         if karma == 1 then
             if hasBrimstone and not hasLumpOfCoal then
                 player:AddCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL, 0, false)
                 return true
             end
+
         elseif karma == 2 then
             if hasWhoreOfBabylon and not hasAbaddon then
                 player:AddCollectible(CollectibleType.COLLECTIBLE_ABADDON, 0, false)
@@ -254,7 +251,7 @@ local function Tyronize()
             + more
     --]]
     function tyrone.RuinGame()
-        local karma = dropSeed % math.floor(random(3) + math.max(1, player.Luck))
+        local karma = dropSeed % math.floor(random(4) + math.max(1, player.Luck))
         _log[3] = "Bad Karma is " .. karma
 
         if karma == 1 then
@@ -614,9 +611,15 @@ local function Tyronize()
         reset the costume to Tyrone's magnificient visage
     --]]
     function tyrone.DressMeUp()
-        if player:GetCollectibleCount() ~= collectibleCount then
-            --player:ClearCostumes()
-            player:AddNullCostume(costume)
+        if player:GetCollectibleCount() ~= collectibleCount or
+           updateCostume == true then
+            if tyroneHasPressedTheButton then
+                player:AddNullCostume(costume_scheming)
+                updateCostume = false
+            else
+                player:AddNullCostume(costume_srs)
+            end
+
             collectibleCount = player:GetCollectibleCount()
         end
     end
@@ -626,7 +629,6 @@ local function Tyronize()
         check if the player can destroy rocks in any way
     --]]
     function tyrone.CanPlayerDestroyThings()
-        _log[1] = tostring(hasHagalaz)
         if player:GetNumBombs() > 0 or
            hasEpicFetus or hasDrFetus or
            hasThunderThighs or hasLeo or
@@ -640,9 +642,16 @@ local function Tyronize()
 
 
     --[[
+        play a warning sound
+    --]]
+    function tyrone.Achtung() -- !
+        SFXManager():Play(SoundEffect.SOUND_THUMBS_DOWN, 1.0, 0, false, 1.0);
+    end
+
+
+    --[[
         unit test for stuff
     --]]
-
     function tyrone.TestMe()
         if not tyrone.CanPlayerDestroyThings() then
             for i=0,room:GetGridSize() do
@@ -652,10 +661,8 @@ local function Tyronize()
                         if ent:GetType() ~= GridEntityType.GRID_ROCKT and
                            ent:GetType() ~= GridEntityType.GRID_ROCK_SS then
                             local pos = ent:GetGridIndex()
-                            if pos % 7 == 0 then
+                            if pos % 32 == 0 then
                                 ent:SetType(GridEntityType.GRID_ROCKT)
-                            elseif pos % 13 then
-                                ent:SetType(GridEntityType.GRID_ROCK_SS)
                             end
                         end
                     end
@@ -727,27 +734,37 @@ function mod:PostUpdate()
         karma
     --]]
     if tyroneHasPressedTheButton and not ruinedYet and not noticedYet then
-        if not tyRooms[spawnSeed] then
+        if not tyRooms[spawnSeed] and karma == 0 then
             tyRooms[spawnSeed] = true
-            karma = random(2)
+            updateCostume = true
+        end
+
+        -- play sound and only roll karma once
+        if karma == 0 then
+            tyrone.Achtung()
+            karma = random(1, 3)
+            _log[0] = "karma is " .. karma
         end
 
         -- try and ruin synergies, don't expire the button unless satisfied
-        if karma == 0 then
+        if karma == 1 then
             _log[1] = "Tyrone wants to ruin your synergies"
             ruinedYet = tyrone.RuinSynergies()
+
         -- try and ruin the game, don't expire the button unless satisfied
-        elseif karma == 1 then
+        elseif karma == 2 then
             _log[1] = "Tyrone wants to ruin your game"
             ruinedYet = tyrone.RuinGame()
+
         -- try and be good but expire the button if you can't act right now
-        elseif karma == 2 then
+        elseif karma == 3 then
             _log[1] = "Tyrone-senpai noticed you"
             noticedYet = tyrone.NoticeMe()
             if not noticedYet then
                 _log[2] = "Tyrone-senpai has stopped caring"
                 tyroneHasPressedTheButton = false
                 noticedYet = false
+                updateCostume = false
             end
         end
     end
@@ -761,6 +778,8 @@ function mod:PostUpdate()
         tyroneHasPressedTheButton = false
         ruinedYet = false
         noticedYet = false
+        updateCostume = false
+        karma = 0
     end
 
 end
